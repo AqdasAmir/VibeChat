@@ -6,6 +6,7 @@ import { useAuthStore } from "../store/useAuthStore";
 
 function ChatsList() {
     const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } = useChatStore();
+    const { onlineUsers } = useAuthStore();
 
     useEffect(() => {
     getMyChatPartners();
@@ -23,8 +24,7 @@ function ChatsList() {
           onClick={() => setSelectedUser(chat)}
         >
           <div className="flex items-center gap-3">
-            {/* // TODO: Add online status indicator based on chat partner's status with socket.io */}
-            <div className={`avatar online`}>
+            <div className={`avatar ${onlineUsers.includes(chat._id) ? "online" : "offline"}`}>
               <div className="size-12 rounded-full">
                 <img src={chat.profilePic || "/avatar.png"} alt={chat.fullName} />
               </div>
