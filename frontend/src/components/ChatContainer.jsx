@@ -7,14 +7,18 @@ import MessageInput from './MessageInput';
 import MessagesLoadingSkeleton from './MessagesLoadingSkeleton';
 
 function ChatContainer() {
-  const { selectedUser, messages, getMessagesByUserId, isMessagesLoading } = useChatStore();
+  const { selectedUser, messages, getMessagesByUserId, isMessagesLoading, subscribeToNewMessages, unsubscribeFromNewMessages } = useChatStore();
   const { authUser } = useAuthStore();
 
   const messageEndRef = React.useRef(null);
 
   useEffect(() =>{
     getMessagesByUserId(selectedUser._id);
-  }, [selectedUser, getMessagesByUserId]);
+    subscribeToNewMessages();
+
+    // Cleanup function to unsubscribe from new messages when the component unmounts or when selectedUser changes
+    return () => unsubscribeFromNewMessages();
+  }, [selectedUser, getMessagesByUserId, subscribeToNewMessages, unsubscribeFromNewMessages]);
 
   useEffect(() => {
     if(messageEndRef.current) {
